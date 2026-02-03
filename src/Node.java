@@ -68,7 +68,7 @@ public class Node {
    */
   public List<Integer> toList() {
 
-    // create empty list to return 
+    // create empty ArrayList to populate
     List<Integer> newList = new ArrayList<>(); 
 
     // start at given node
