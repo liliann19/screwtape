@@ -131,9 +131,11 @@ public class ScrewtapeInterpreter {
           bracketMap.put(i, openingIndex); // store the pair in the map 
         } 
     }
-    if(!openings.empty()){
+
+    if (!openings.empty()){
       throw new IllegalArgumentException();
     }
+    
     return bracketMap;
   }
 
@@ -156,8 +158,61 @@ public class ScrewtapeInterpreter {
    * @throws IllegalArgumentException If the program contains unmatched brackets.
    */
   public String execute(String program) {
-    // TODO: Implement this
-    // If you get stuck, you can look at hint.md for a hint
-    return null;
+
+    int instructionPointer = 0; // keeps track of position in the program 
+    String outputString = ""; // stores characters output
+
+    // create map of matching brackets so we can loop 
+    Map<Integer, Integer> loop = bracketMap(program);
+
+    while (instructionPointer < program.length()) {
+      char current = program.charAt(instructionPointer); // current position 
+
+      // increment value at current position
+      if (current == '+') {
+        tapePointer.value++;
+      }
+
+      // decrement value at current position 
+      if (current == '-') {
+        tapePointer.value--;
+      }
+
+      // move pointer right, create a new node if needed
+      if (current == '>') {
+        if (tapePointer.next == null) { 
+          tapePointer.next = new Node(0);
+          tapePointer.next.prev = tapePointer;
+        }
+        tapePointer = tapePointer.next; // move right 
+      }
+      
+      // move pointer left, create a new node if needed 
+      if (current == '<') {
+        if (tapePointer.prev == null) { 
+          tapePointer.prev = new Node(0);
+          tapePointer.prev.next = tapePointer;
+          tapeHead = tapePointer.prev; // new head 
+        }
+        tapePointer = tapePointer.prev; // move left
+      }
+
+      // output the ASCII character at current value 
+      if (current == '.') {
+        outputString += (char) tapePointer.value;
+      }
+
+      // if current value is not zero, move back to matching '['
+      if (current == ']') {
+        if (tapePointer.value != 0) {
+          instructionPointer = loop.get(instructionPointer);
+        }
+      }
+
+      // move to the next position
+      instructionPointer++;
+    }
+
+    return outputString; // return output 
   }
 }
