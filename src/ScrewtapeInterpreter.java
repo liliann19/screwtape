@@ -132,11 +132,12 @@ public class ScrewtapeInterpreter {
         } 
     }
 
+    // if stack not empty, there were unmatched openings 
     if (!openings.empty()){
       throw new IllegalArgumentException();
     }
     
-    return bracketMap;
+    return bracketMap; 
   }
 
   /*
